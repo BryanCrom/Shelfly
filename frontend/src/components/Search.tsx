@@ -1,11 +1,28 @@
-import { algoliasearch } from "algoliasearch";
-import { InstantSearch, PoweredBy, SearchBox } from "react-instantsearch";
+import { algoliasearch, type Algoliasearch } from "algoliasearch";
+import { InstantSearch, SearchBox, Hits } from "react-instantsearch";
+import type { Hit } from "instantsearch.js";
 
-const SearchBar = () => {
-  const searchClient = algoliasearch(
+const Search = () => {
+  const searchClient: Algoliasearch = algoliasearch(
     import.meta.env.VITE_ALGOLIA_APPLICATION_ID,
     import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY,
   );
+
+  type MyHit = Hit<{
+    title: string;
+    poster_path: string;
+  }>;
+
+  function Hit({ hit }: { hit: MyHit }) {
+    console.log(hit);
+
+    return (
+      <>
+        <img src={hit.poster_path} />
+        <div>{hit.title}</div>
+      </>
+    );
+  }
 
   return (
     <div className="mt-40">
@@ -17,7 +34,7 @@ const SearchBar = () => {
           searchAsYouType={true}
           placeholder="Search for books"
           classNames={{
-            root: "w-40 mx-auto",
+            root: "w-2xl mx-auto",
             form: "flex items-center bg-white rounded-xl shadow-md border border-gray-200 focus-within:border-blue-500",
             input:
               "flex-1 p-3 text-gray-800 placeholder-gray-400 focus:outline-none",
@@ -25,12 +42,11 @@ const SearchBar = () => {
             submit: "hidden",
             loadingIndicator: "hidden",
           }}
-        >
-          <PoweredBy />
-        </SearchBox>
+        />
+        <Hits<MyHit> hitComponent={Hit} />
       </InstantSearch>
     </div>
   );
 };
 
-export default SearchBar;
+export default Search;
