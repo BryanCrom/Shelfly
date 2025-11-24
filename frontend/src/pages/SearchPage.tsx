@@ -7,7 +7,7 @@ const SearchPage = () => {
       <Search />
       <PoweredBy
         classNames={{
-          root: "mt-10 w-50 mx-auto",
+          root: "my-10 w-50 mx-auto",
         }}
       />
     </>
