@@ -1,13 +1,7 @@
-import { algoliasearch, type Algoliasearch } from "algoliasearch";
 import { InstantSearch, SearchBox, Hits } from "react-instantsearch";
 import type { Hit } from "instantsearch.js";
 
 const Search = () => {
-  const searchClient: Algoliasearch = algoliasearch(
-    import.meta.env.VITE_ALGOLIA_APPLICATION_ID,
-    import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY,
-  );
-
   type MyHit = Hit<{
     title: string;
     poster_path: string;
