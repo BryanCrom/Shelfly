@@ -8,6 +8,7 @@ package com.bryan_crombach.backend.controllers;
 import com.algolia.search.models.indexing.SearchResult;
 import com.bryan_crombach.backend.Services.AlgoliaService;
 import com.bryan_crombach.backend.models.Book;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
