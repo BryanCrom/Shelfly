@@ -1,16 +1,14 @@
+import Result from "./Result";
+
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import { useState, useMemo, useRef } from "react";
+import { IconX } from "@tabler/icons-react";
 
 import type {
   AutocompleteSource,
   AutocompleteState,
 } from "@algolia/autocomplete-core";
-
-type SearchItem = {
-  objectID: string;
-  title: string;
-  url: string;
-};
+import type { SearchItem } from "../types/SearchTypes";
 
 export function Autocomplete() {
   const [autocompleteState, setAutocompleteState] = useState<
@@ -25,7 +23,7 @@ export function Autocomplete() {
     status: "idle",
   });
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const autocomplete = useMemo(
     () =>
@@ -70,26 +68,54 @@ export function Autocomplete() {
             {...autocomplete.getLabelProps({})}
           ></label>
         </div>
-        <div className="aa-InputWrapper">
-          {/* @ts-expect-error Algolia uses native DOM events instead of React.ChangeEvent */}
-          <input
-            className="aa-Input"
-            ref={inputRef}
-            {...autocomplete.getInputProps({ inputElement: inputRef.current })}
-          />
+
+        <div className="relative mx-auto w-2xl">
+          <div className="aa-InputWrapper my-10 h-14 flex-row">
+            {/* @ts-expect-error Algolia uses native DOM events instead of React.ChangeEvent */}
+            <input
+              className="aa-Input h-full w-full rounded-full border-2 border-black/20 py-2 pr-10 pl-4 shadow-md outline-none focus:border-blue-500"
+              ref={inputRef}
+              {...autocomplete.getInputProps({
+                inputElement: inputRef.current,
+              })}
+              placeholder="Search books..."
+            ></input>
+          </div>
+          {autocompleteState.query && (
+            <div className="aa-InputWrapperSuffix">
+              <button
+                className="aa-ClearButton absolute top-1/2 right-2 -translate-x-1 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                onClick={() => {
+                  autocomplete.setQuery("");
+                  requestAnimationFrame(() => {
+                    inputRef.current?.focus();
+                  });
+                }}
+              >
+                <IconX />
+              </button>
+            </div>
+          )}
         </div>
       </form>
+
       {/* @ts-expect-error Algolia uses native DOM events instead of React.ChangeEvent */}
-      <div className="aa-Panel" {...autocomplete.getPanelProps({})}>
+      <div
+        className="aa-Panel mx-auto w-2xl"
+        {...autocomplete.getPanelProps({})}
+      >
         {autocompleteState.isOpen &&
           autocompleteState.collections.map((collection, index) => {
             const { source, items } = collection;
 
             return (
-              <div key={`source-${index}`} className="aa-Source">
+              <div
+                key={`source-${index}`}
+                className="aa-Source rounded-2xl border-2 border-blue-500 p-3"
+              >
                 {items.length > 0 && (
                   <ul className="aa-List" {...autocomplete.getListProps()}>
-                    {items.map((item) => (
+                    {items.map((item: SearchItem) => (
                       <li
                         key={item.objectID}
                         className="aa-Item"
@@ -111,7 +137,7 @@ export function Autocomplete() {
                             .onClick?.(e.nativeEvent)
                         }
                       >
-                        {item.title}
+                        <Result item={item} />
                       </li>
                     ))}
                   </ul>

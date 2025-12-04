@@ -15,8 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Book {
-    private String title;
     private String objectID;
+    private String title;
     private String url;
 //    private String author;
 //    private String publisher;
