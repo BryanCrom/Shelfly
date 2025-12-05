@@ -111,11 +111,11 @@ export function Autocomplete() {
             return (
               <div
                 key={`source-${index}`}
-                className="aa-Source rounded-2xl border-2 border-blue-500 p-3"
+                className="aa-Source rounded-2xl border-2 border-blue-500 p-3 shadow-md"
               >
                 {items.length > 0 && (
                   <ul className="aa-List" {...autocomplete.getListProps()}>
-                    {items.map((item: SearchItem) => (
+                    {items.map((item: SearchItem, index: number) => (
                       <li
                         key={item.objectID}
                         className="aa-Item"
@@ -137,7 +137,17 @@ export function Autocomplete() {
                             .onClick?.(e.nativeEvent)
                         }
                       >
-                        <Result item={item} />
+                        {index === 0 ? (
+                          // first item must not have border
+                          <div className="mx-5 flex h-64 p-5">
+                            <Result item={item} />
+                          </div>
+                        ) : (
+                          //every other item must show a border
+                          <div className="mx-5 flex h-64 border-t-2 border-black/20 p-5">
+                            <Result item={item} />
+                          </div>
+                        )}
                       </li>
                     ))}
                   </ul>

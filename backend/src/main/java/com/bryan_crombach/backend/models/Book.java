@@ -18,7 +18,8 @@ public class Book {
     private String objectID;
     private String title;
     private String url;
-//    private String author;
+    private String poster_path;
+    private String overview;
 //    private String publisher;
 //    private String description;
 //    private String genre;

@@ -5,7 +5,15 @@ interface ResultProps {
 }
 
 const Result = ({ item }: ResultProps) => {
-  return <div>{item.title}</div>;
+  return (
+    <>
+      <img src={item.poster_path} className="" />
+      <div className="px-5">
+        <p className="font-semibold">{item.title}</p>
+        <p>{item.overview}</p>
+      </div>
+    </>
+  );
 };
 
 export default Result;
