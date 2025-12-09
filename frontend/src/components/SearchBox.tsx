@@ -1,3 +1,4 @@
+import { debouncePromise } from "../utils/SearchBoxUtil";
 import Result from "./Result";
 
 import { createAutocomplete } from "@algolia/autocomplete-core";
@@ -25,12 +26,24 @@ export function Autocomplete() {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const STALL_THRESHOLD_MS = 500;
+  const DEBOUNCE_MS = 200;
+
+  const debouncedRef = useRef(
+    debouncePromise(async (query: string): Promise<SearchItem[]> => {
+      const response = await fetch(`/search?q=${query}`);
+      const data = await response.json();
+      return data.hits;
+    }, DEBOUNCE_MS),
+  );
+
   const autocomplete = useMemo(
     () =>
       createAutocomplete<SearchItem>({
         onStateChange({ state }) {
           setAutocompleteState(state);
         },
+        stallThreshold: STALL_THRESHOLD_MS,
         getSources(): Array<AutocompleteSource<SearchItem>> {
           return [
             {
@@ -39,11 +52,7 @@ export function Autocomplete() {
                 return item.title;
               },
               async getItems({ query }) {
-                console.log("Query typed:", query);
-                const response = await fetch(`/search?q=${query}`);
-                const data = await response.json();
-                console.log("Data from backend:", data);
-                return data.hits;
+                return debouncedRef.current(query);
               },
               getItemUrl({ item }) {
                 return item.url;
