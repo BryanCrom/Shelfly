@@ -3,7 +3,7 @@ Author: Bryan Crombach
 Purpose: service that controls all algolia functionality
  */
 
-package com.bryan_crombach.backend.Services;
+package com.bryan_crombach.backend.services;
 
 import com.algolia.search.models.indexing.Query;
 import com.algolia.search.models.indexing.SearchResult;
@@ -23,15 +23,15 @@ public class AlgoliaService {
     }
 
     public void saveBook(Book book) {
-        algoliaIndex.saveObject(book);
+        algoliaIndex.saveObject(book).waitTask();
     }
 
     public void saveBooks(List<Book> books) {
-        algoliaIndex.saveObjects(books);
+        algoliaIndex.saveObjects(books).waitTask();
     }
 
     public void deleteBook(String bookId) {
-        algoliaIndex.deleteObject(bookId);
+        algoliaIndex.deleteObject(bookId).waitTask();
     }
 
     public SearchResult<Book> searchBook(String query) {

@@ -54,9 +54,9 @@ export function Autocomplete() {
               async getItems({ query }) {
                 return debouncedRef.current(query);
               },
-              getItemUrl({ item }) {
-                return item.url;
-              },
+              // getItemUrl({ item }) {
+              //   return item.url;
+              // },
             },
           ];
         },
@@ -88,7 +88,7 @@ export function Autocomplete() {
                 inputElement: inputRef.current,
               })}
               placeholder="Search books..."
-            ></input>
+            />
           </div>
           {autocompleteState.query && (
             <div className="aa-InputWrapperSuffix">

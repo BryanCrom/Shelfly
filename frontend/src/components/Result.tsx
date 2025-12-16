@@ -7,10 +7,11 @@ interface ResultProps {
 const Result = ({ item }: ResultProps) => {
   return (
     <>
-      <img src={item.poster_path} className="" />
       <div className="px-5">
         <p className="font-semibold">{item.title}</p>
-        <p>{item.overview}</p>
+        <p>{item.author}</p>
+        <p>{item.isbn10}</p>
+        <p>{item.isbn13}</p>
       </div>
     </>
   );
