@@ -1,7 +1,7 @@
 export function debouncePromise(fn, time) {
   let timer = undefined;
 
-  return function debounced(...args) {
+  function debounced(...args) {
     if (timer) {
       clearTimeout(timer);
     }
@@ -9,5 +9,14 @@ export function debouncePromise(fn, time) {
     return new Promise((resolve) => {
       timer = setTimeout(() => resolve(fn(...args)), time);
     });
+  }
+
+  debounced.cancel = () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = undefined;
+    }
   };
+
+  return debounced;
 }

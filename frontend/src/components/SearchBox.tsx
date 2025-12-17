@@ -25,17 +25,38 @@ export function Autocomplete() {
   });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const forceSearech = useRef<boolean>(false);
+  const activeController = useRef<AbortController | null>(null);
+  const lastQuery = useRef<string | null>(null);
+  const lastResults = useRef<SearchItem[] | null>(null);
 
   const STALL_THRESHOLD_MS = 500;
   const DEBOUNCE_MS = 200;
 
   const debouncedRef = useRef(
-    debouncePromise(async (query: string): Promise<SearchItem[]> => {
-      const response = await fetch(`/search?q=${query}`);
-      const data = await response.json();
-      return data.hits;
+    debouncePromise(async (query: string): Promise<SearchItem[] | null> => {
+      return search(query);
     }, DEBOUNCE_MS),
   );
+
+  async function search(query: string): Promise<SearchItem[] | null> {
+    if (!query || query === lastQuery.current) {
+      return lastResults.current;
+    }
+
+    lastQuery.current = query;
+
+    if (activeController) {
+      activeController.current?.abort();
+    }
+
+    activeController.current = new AbortController();
+    const response = await fetch(`/search?q=${query}`);
+    const data = await response.json();
+    const hits = data.hits;
+    lastResults.current = hits;
+    return hits;
+  }
 
   const autocomplete = useMemo(
     () =>
@@ -52,6 +73,11 @@ export function Autocomplete() {
                 return item.title;
               },
               async getItems({ query }) {
+                if (forceSearech.current === true) {
+                  forceSearech.current = false;
+                  return search(query);
+                }
+
                 return debouncedRef.current(query);
               },
               // getItemUrl({ item }) {
@@ -82,11 +108,27 @@ export function Autocomplete() {
           <div className="aa-InputWrapper my-10 h-14 flex-row">
             {/* @ts-expect-error Algolia uses native DOM events instead of React.ChangeEvent */}
             <input
-              className="aa-Input h-full w-full rounded-full border-2 border-black/20 py-2 pr-10 pl-4 shadow-md outline-none focus:border-blue-500"
               ref={inputRef}
+              className="aa-Input h-full w-full rounded-full border-2 border-black/20 py-2 pr-10 pl-4 shadow-md outline-none focus:border-blue-500"
               {...autocomplete.getInputProps({
                 inputElement: inputRef.current,
+                onFocus() {
+                  autocomplete.setIsOpen(true); // reopen results
+                },
               })}
+              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                const inputProps =
+                  autocomplete.getInputProps as React.InputHTMLAttributes<HTMLInputElement>;
+                inputProps.onKeyDown?.(event);
+
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  debouncedRef.current.cancel();
+                  activeController.current?.abort();
+                  forceSearech.current = true;
+                  autocomplete.refresh();
+                }
+              }}
               placeholder="Search books..."
             />
           </div>
@@ -124,7 +166,7 @@ export function Autocomplete() {
               >
                 {items.length > 0 && (
                   <ul className="aa-List" {...autocomplete.getListProps()}>
-                    {items.map((item: SearchItem, index: number) => (
+                    {items.map((item: SearchItem) => (
                       <li
                         key={item.objectID}
                         className="aa-Item"
@@ -146,17 +188,7 @@ export function Autocomplete() {
                             .onClick?.(e.nativeEvent)
                         }
                       >
-                        {index === 0 ? (
-                          // first item must not have border
-                          <div className="mx-5 flex h-64 p-5">
-                            <Result item={item} />
-                          </div>
-                        ) : (
-                          //every other item must show a border
-                          <div className="mx-5 flex h-64 border-t-2 border-black/20 p-5">
-                            <Result item={item} />
-                          </div>
-                        )}
+                        <Result item={item} />
                       </li>
                     ))}
                   </ul>
