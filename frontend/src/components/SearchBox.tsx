@@ -151,49 +151,24 @@ export function Autocomplete() {
       </form>
 
       {/* @ts-expect-error Algolia uses native DOM events instead of React.ChangeEvent */}
-      <div
-        className="aa-Panel mx-auto w-2xl"
-        {...autocomplete.getPanelProps({})}
-      >
+      <div className="aa-Panel mx-10" {...autocomplete.getPanelProps({})}>
         {autocompleteState.isOpen &&
           autocompleteState.collections.map((collection, index) => {
-            const { source, items } = collection;
+            const { items } = collection;
 
             return (
-              <div
-                key={`source-${index}`}
-                className="aa-Source rounded-2xl border-2 border-blue-500 p-3 shadow-md"
-              >
+              <>
                 {items.length > 0 && (
-                  <ul className="aa-List" {...autocomplete.getListProps()}>
+                  <div
+                    key={`source-${index}`}
+                    className="aa-Source grid grid-cols-3 rounded-2xl border-2 border-blue-500 p-3 shadow-md"
+                  >
                     {items.map((item: SearchItem) => (
-                      <li
-                        key={item.objectID}
-                        className="aa-Item"
-                        role="option"
-                        aria-selected={false}
-                        onMouseMove={(e) =>
-                          autocomplete
-                            .getItemProps({ item, source })
-                            .onMouseMove?.(e.nativeEvent)
-                        }
-                        onMouseDown={(e) =>
-                          autocomplete
-                            .getItemProps({ item, source })
-                            .onMouseDown?.(e.nativeEvent)
-                        }
-                        onClick={(e) =>
-                          autocomplete
-                            .getItemProps({ item, source })
-                            .onClick?.(e.nativeEvent)
-                        }
-                      >
-                        <Result item={item} />
-                      </li>
+                      <Result item={item} />
                     ))}
-                  </ul>
+                  </div>
                 )}
-              </div>
+              </>
             );
           })}
       </div>

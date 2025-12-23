@@ -9,7 +9,7 @@ const Result = ({ item }: ResultProps) => {
     <>
       <div className="px-5">
         <p className="font-semibold">{item.title}</p>
-        <p>{item.author}</p>
+        <p>{item.authors}</p>
       </div>
     </>
   );

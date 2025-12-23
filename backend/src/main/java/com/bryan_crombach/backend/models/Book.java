@@ -13,9 +13,15 @@ import lombok.*;
 public class Book {
     private String objectID;
     private String title;
-    private String author;
+    private String[] authors;
+    private String publisher;
+    private String publishedDate;
+    private String description;
     private String isbn10;
     private String isbn13;
-    private int publishedYear;
-    private String source;
+    private String pageCount;
+    private String[] Categories;
+    private String coverURL;
+    private String language;
+
 }

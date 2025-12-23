@@ -1,9 +1,14 @@
 export type SearchItem = {
   objectID: string;
   title: string;
-  author: string;
+  authors: string[];
+  publisher: string;
+  published_date: string;
+  description: string;
   isbn10: string;
   isbn13: string;
-  published_year: number;
-  source: string;
+  page_count: string;
+  categories: string[];
+  cover_url: string;
+  language: string;
 };
