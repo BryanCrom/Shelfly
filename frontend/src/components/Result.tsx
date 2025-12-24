@@ -7,9 +7,10 @@ interface ResultProps {
 const Result = ({ item }: ResultProps) => {
   return (
     <>
-      <div className="px-5">
+      <div className="p-5">
         <p className="font-semibold">{item.title}</p>
         <p>{item.authors}</p>
+        <img src={item.coverURL} />
       </div>
     </>
   );

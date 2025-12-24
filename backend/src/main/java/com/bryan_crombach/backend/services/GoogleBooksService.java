@@ -24,7 +24,7 @@ public class GoogleBooksService {
 
     public GoogleBooksResponse search(String q) {
 
-        if (q == null || q.trim().length() < 3) {
+        if (q == null) {
             return GoogleBooksResponse.empty();
         }
 
@@ -34,7 +34,7 @@ public class GoogleBooksService {
                 .fromUriString("https://www.googleapis.com/books/v1/volumes")
                 .queryParam("q", q)
                 .queryParam("fields", "items(id,volumeInfo(title,authors,industryIdentifiers,publisher,publishedDate,description,pageCount,categories,imageLinks(thumbnail),language))")
-                .queryParam("maxResults", 10)
+                .queryParam("maxResults", 40)
                 .queryParam("key", properties.getApiKey())
                 .build()
                 .encode()

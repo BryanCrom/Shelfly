@@ -3,12 +3,12 @@ export type SearchItem = {
   title: string;
   authors: string[];
   publisher: string;
-  published_date: string;
+  publishedDate: string;
   description: string;
   isbn10: string;
   isbn13: string;
   page_count: string;
   categories: string[];
-  cover_url: string;
+  coverURL: string;
   language: string;
 };

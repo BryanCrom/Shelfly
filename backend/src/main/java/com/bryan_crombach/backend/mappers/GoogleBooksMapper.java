@@ -1,8 +1,6 @@
 package com.bryan_crombach.backend.mappers;
 
-import com.bryan_crombach.backend.models.Book;
-import com.bryan_crombach.backend.models.GoogleBooks;
-import com.bryan_crombach.backend.models.GoogleBooksResponse;
+import com.bryan_crombach.backend.models.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,22 +14,29 @@ public class GoogleBooksMapper {
         List<Book> books = new ArrayList<>();
 
         for(GoogleBooks book: response.getItems()){
+
+            VolumeInfo volumeInfo = book.getVolumeInfo();
+
             String isbn10 = "";
             String isbn13 = "";
+            String thumbnailUrl = "";
 
-            if(book.getIndustryIdentifiers() != null){
-                for(Map.Entry<String, String> entry: book.getIndustryIdentifiers()){
-                    if(entry.getKey().equals("isbn10")){
-                        isbn10 = entry.getValue();
+            if(volumeInfo.getIndustryIdentifiers() != null){
+                for(IndustryIdentifiers identifier: volumeInfo.getIndustryIdentifiers()){
+                    if(identifier.getType().equals("isbn10")){
+                        isbn10 = identifier.getIdentifier();
                     }
-                    if(entry.getKey().equals("isbn13")){
-                        isbn13 = entry.getValue();
+                    if(identifier.getType().equals("isbn13")){
+                        isbn13 = identifier.getIdentifier();
                     }
                 }
             }
 
-            books.add(new Book(book.getId(), book.getTitle(), book.getAuthors(), book.getPublisher(), book.getPublishedDate(), book.getDescription(), isbn10, isbn13, book.getPageCount(), book.getCategories(), book.getThumbnail(), book.getLanguage()));
+            if(volumeInfo.getImageLinks() != null){
+                thumbnailUrl = volumeInfo.getImageLinks().getThumbnail();
+            }
 
+            books.add(new Book(book.getId(), volumeInfo.getTitle(), volumeInfo.getAuthors(), volumeInfo.getPublisher(), volumeInfo.getPublishedDate(), volumeInfo.getDescription(), isbn10, isbn13, volumeInfo.getPageCount(), volumeInfo.getCategories(), thumbnailUrl, volumeInfo.getLanguage()));
         }
 
         return books;

@@ -1,4 +1,3 @@
-import { debouncePromise } from "../utils/SearchBoxUtil";
 import Result from "./Result";
 
 import { createAutocomplete } from "@algolia/autocomplete-core";
@@ -25,32 +24,16 @@ export function Autocomplete() {
   });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const forceSearech = useRef<boolean>(false);
-  const activeController = useRef<AbortController | null>(null);
   const lastQuery = useRef<string | null>(null);
-  const lastResults = useRef<SearchItem[] | null>(null);
+  const lastResults = useRef<SearchItem[]>([]);
 
-  const STALL_THRESHOLD_MS = 500;
-  const DEBOUNCE_MS = 200;
-
-  const debouncedRef = useRef(
-    debouncePromise(async (query: string): Promise<SearchItem[] | null> => {
-      return search(query);
-    }, DEBOUNCE_MS),
-  );
-
-  async function search(query: string): Promise<SearchItem[] | null> {
+  async function search(query: string): Promise<SearchItem[]> {
     if (!query || query === lastQuery.current) {
       return lastResults.current;
     }
 
     lastQuery.current = query;
 
-    if (activeController) {
-      activeController.current?.abort();
-    }
-
-    activeController.current = new AbortController();
     const response = await fetch(`/search?q=${query}`);
     const data = await response.json();
     const hits = data.hits;
@@ -64,7 +47,6 @@ export function Autocomplete() {
         onStateChange({ state }) {
           setAutocompleteState(state);
         },
-        stallThreshold: STALL_THRESHOLD_MS,
         getSources(): Array<AutocompleteSource<SearchItem>> {
           return [
             {
@@ -73,12 +55,7 @@ export function Autocomplete() {
                 return item.title;
               },
               async getItems({ query }) {
-                if (forceSearech.current === true) {
-                  forceSearech.current = false;
-                  return search(query);
-                }
-
-                return debouncedRef.current(query);
+                return search(query);
               },
               // getItemUrl({ item }) {
               //   return item.url;
@@ -123,10 +100,6 @@ export function Autocomplete() {
 
                 if (event.key === "Enter") {
                   event.preventDefault();
-                  debouncedRef.current.cancel();
-                  activeController.current?.abort();
-                  forceSearech.current = true;
-                  autocomplete.refresh();
                 }
               }}
               placeholder="Search books..."
