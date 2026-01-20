@@ -28,8 +28,6 @@ public class GoogleBooksService {
             return GoogleBooksResponse.empty();
         }
 
-
-
         URI uri = UriComponentsBuilder
                 .fromUriString("https://www.googleapis.com/books/v1/volumes")
                 .queryParam("q", q)

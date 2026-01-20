@@ -1,4 +1,6 @@
-export type SearchItem = {
+import type { AlgoliaHit } from "instantsearch.js";
+
+export type SearchItem = AlgoliaHit<{
   objectID: string;
   title: string;
   authors: string[];
@@ -11,4 +13,4 @@ export type SearchItem = {
   categories: string[];
   coverURL: string;
   language: string;
-};
+}>;

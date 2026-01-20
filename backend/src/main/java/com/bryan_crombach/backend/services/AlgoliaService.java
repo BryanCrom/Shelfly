@@ -22,19 +22,9 @@ public class AlgoliaService {
         this.algoliaIndex = algoliaIndex;
     }
 
-    public void saveBook(Book book) {
-        algoliaIndex.saveObject(book).waitTask();
-    }
-
     public void saveBooks(List<Book> books) {
         algoliaIndex.saveObjects(books).waitTask();
     }
 
-    public void deleteBook(String bookId) {
-        algoliaIndex.deleteObject(bookId).waitTask();
-    }
-
-    public SearchResult<Book> searchBook(String query) {
-        return algoliaIndex.search(new Query(query));
-    }
+    public SearchResult<Book> searchBooks(String query) { return algoliaIndex.search(new Query(query)); }
 }

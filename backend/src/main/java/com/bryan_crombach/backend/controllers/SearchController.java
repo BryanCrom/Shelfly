@@ -5,12 +5,11 @@ Purpose: api routes for the search function
 
 package com.bryan_crombach.backend.controllers;
 
-import java.util.List;
 import com.algolia.search.models.indexing.SearchResult;
 import com.bryan_crombach.backend.mappers.GoogleBooksMapper;
+import com.bryan_crombach.backend.models.Book;
 import com.bryan_crombach.backend.models.GoogleBooksResponse;
 import com.bryan_crombach.backend.services.AlgoliaService;
-import com.bryan_crombach.backend.models.Book;
 import com.bryan_crombach.backend.services.GoogleBooksService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,14 +32,8 @@ public class SearchController {
 
         GoogleBooksResponse response = googleBooksService.search(q);
 
-        System.out.println("GoogleBooks Response: " + response);
+        algoliaService.saveBooks(GoogleBooksMapper.normaliseGoogleBooks(response));
 
-        List<Book> books = GoogleBooksMapper.normaliseGoogleBooks(response);
-
-        System.out.println("GoogleBooks Books: " + books);
-
-        algoliaService.saveBooks(books);
-
-        return algoliaService.searchBook(q);
+        return algoliaService.searchBooks(q);
     }
 }

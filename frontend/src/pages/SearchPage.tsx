@@ -1,11 +1,11 @@
-import { Autocomplete } from "../components/SearchBox";
+import Search from "../components/SearchBox";
 
 import { PoweredBy } from "react-instantsearch";
 
 const SearchPage = () => {
   return (
     <>
-      <Autocomplete />
+      <Search />
       <PoweredBy
         classNames={{
           root: "my-10 w-50 mx-auto",
