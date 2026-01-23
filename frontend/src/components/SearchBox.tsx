@@ -1,12 +1,19 @@
+import Result from "./Result";
+
 import { useState } from "react";
 
-const SearchBox = () => {
-  const [input, setInput] = useState("");
+import type { SearchItem } from "../types/SearchTypes";
 
-  const handleSubmit = (e: React.FormEvent) => {
+const SearchBox = () => {
+  const [input, setInput] = useState<string>("");
+  const [hits, setHits] = useState<SearchItem[]>([]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(input);
+    const response = await fetch(`/search?q=${input}`);
+    const data = await response.json();
+    setHits(data.hits);
   };
 
   return (
@@ -32,6 +39,9 @@ const SearchBox = () => {
           </button>
         </div>
       </form>
+      {hits.map((hit) => (
+        <Result item={hit} key={hit.objectID} />
+      ))}
     </div>
   );
 };
