@@ -21,7 +21,7 @@ const SearchBox = () => {
       <form onSubmit={handleSubmit}>
         <div className="mx-auto my-10 flex items-center justify-center">
           <input
-            className="h-12 min-w-2xl rounded-2xl border-2 border-black p-2"
+            className="input input-primary input-lg min-w-2xl"
             type="search"
             autoFocus
             placeholder="Search for books..."
@@ -31,17 +31,16 @@ const SearchBox = () => {
               setInput(e.target.value);
             }}
           />
-          <button
-            className="mx-4 h-12 rounded-2xl border-2 p-2 hover:bg-red-600"
-            type="submit"
-          >
+          <button className="btn btn-primary btn-lg mx-4" type="submit">
             Search
           </button>
         </div>
       </form>
-      {hits.map((hit) => (
-        <Result item={hit} key={hit.objectID} />
-      ))}
+      <div className="mx-4 grid grid-cols-5 gap-10 shadow-sm">
+        {hits.map((hit) => (
+          <Result item={hit} key={hit.objectID} />
+        ))}
+      </div>
     </div>
   );
 };

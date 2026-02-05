@@ -7,6 +7,7 @@ const SearchPage = () => {
     <>
       <Search />
       <PoweredBy
+        theme={"dark"}
         classNames={{
           root: "my-10 w-50 mx-auto",
         }}
