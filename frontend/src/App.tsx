@@ -1,14 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import SearchPage from "./pages/SearchPage";
+// import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SearchPage />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      {/* <Navbar /> */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SearchPage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
