@@ -44,6 +44,8 @@ public class GoogleBooksMapper {
                 }
             }
 
+
+
             String thumbnail = imageLinks.getThumbnail();
 
             Book newBook = new Book(id, title, authors, publisher, publishedDate, description, isbn10, isbn13, pageCount, categories, thumbnail, language);

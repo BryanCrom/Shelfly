@@ -11,6 +11,7 @@ import com.bryan_crombach.backend.models.Book;
 import com.bryan_crombach.backend.models.GoogleBooksResponse;
 import com.bryan_crombach.backend.services.AlgoliaService;
 import com.bryan_crombach.backend.services.GoogleBooksService;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,5 +36,12 @@ public class SearchController {
         algoliaService.saveBooks(GoogleBooksMapper.normaliseGoogleBooks(response));
 
         return algoliaService.searchBooks(q);
+    }
+
+    @RequestMapping("/get/{id}")
+    public Book get(@PathVariable String id) {
+        System.out.println("fetching details of: " + id);
+
+        return algoliaService.getBook(id);
     }
 }

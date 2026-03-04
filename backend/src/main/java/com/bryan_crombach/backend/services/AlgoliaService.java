@@ -27,4 +27,8 @@ public class AlgoliaService {
     }
 
     public SearchResult<Book> searchBooks(String query) { return algoliaIndex.search(new Query(query)); }
+
+    public Book getBook(String ObjectId) {
+        return algoliaIndex.getObject(ObjectId);
+    }
 }
