@@ -31,7 +31,7 @@ public class GoogleBooksService {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://www.googleapis.com/books/v1/volumes")
                 .queryParam("q", q)
-                .queryParam("fields", "items(id,volumeInfo(title,authors,industryIdentifiers,publisher,publishedDate,description,pageCount,categories,imageLinks(thumbnail),language))")
+                .queryParam("fields", "items(id,volumeInfo(title,authors,publisher,publishedDate,description,pageCount,categories,imageLinks(thumbnail),language))")
                 .queryParam("maxResults", 40)
                 .queryParam("key", properties.getApiKey())
                 .build()

@@ -9,8 +9,7 @@ public class VolumeInfo {
     private String publisher;
     private String publishedDate;
     private String description;
-    private IndustryIdentifiers[] industryIdentifiers;
-    private String pageCount;
+    private int pageCount;
     private String[] categories;
     private ImageLinks imageLinks;
     private String language;

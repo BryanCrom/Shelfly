@@ -17,8 +17,6 @@ public class Book {
     private String publisher;
     private String publishedDate;
     private String description;
-    private String isbn10;
-    private String isbn13;
     private String pageCount;
     private String[] Categories;
     private String coverURL;

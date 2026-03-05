@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class GoogleBooksMapper {
@@ -22,33 +21,18 @@ public class GoogleBooksMapper {
             String publisher = volumeInfo.getPublisher();
             String publishedDate = volumeInfo.getPublishedDate();
             String description = volumeInfo.getDescription();
-            IndustryIdentifiers[] industryIdentifiers = volumeInfo.getIndustryIdentifiers();
-            String pageCount = volumeInfo.getPageCount();
+            int pageCount = volumeInfo.getPageCount();
             String[] categories = volumeInfo.getCategories();
             ImageLinks imageLinks = volumeInfo.getImageLinks();
             String language = volumeInfo.getLanguage();
 
-            if(id == null || title == null || authors == null || publisher == null || publishedDate == null || description == null || industryIdentifiers == null || categories == null || imageLinks == null || language == null){
+            if(id == null || title == null || authors == null || publisher == null || publishedDate == null || description == null || categories == null || imageLinks == null || language == null || pageCount == 0){
                 continue;
             }
 
-            String isbn10 = null;
-            String isbn13 = null;
-
-            for(IndustryIdentifiers industryIdentifier: industryIdentifiers){
-                if(Objects.equals(industryIdentifier.getType(), "isbn10")){
-                    isbn10 = industryIdentifier.getIdentifier();
-                }
-                if(Objects.equals(industryIdentifier.getType(), "isbn13")){
-                    isbn13 = industryIdentifier.getIdentifier();
-                }
-            }
-
-
-
             String thumbnail = imageLinks.getThumbnail();
 
-            Book newBook = new Book(id, title, authors, publisher, publishedDate, description, isbn10, isbn13, pageCount, categories, thumbnail, language);
+            Book newBook = new Book(id, title, authors, publisher, publishedDate, description, Integer.toString(pageCount), categories, thumbnail, language);
 
             books.add(newBook);
 
