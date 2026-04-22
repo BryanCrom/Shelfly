@@ -1,6 +1,6 @@
 import type { AlgoliaHit } from "instantsearch.js";
 
-export type SearchItem = AlgoliaHit<{
+export interface SearchItem extends AlgoliaHit {
   objectID: string;
   title: string;
   authors: string[];
@@ -11,4 +11,4 @@ export type SearchItem = AlgoliaHit<{
   categories: string[];
   coverURL: string;
   language: string;
-}>;
+}

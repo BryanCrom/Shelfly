@@ -6,7 +6,9 @@ interface DetailTextProps {
 const DetailText = (props: DetailTextProps) => {
   return (
     <p className="text-base-content mb-5 text-2xl">
-      <span className="font-bold">{props.title} </span>
+      <span className="text-base-content font-bold underline">
+        {props.title}
+      </span>{" "}
       {props.content}
     </p>
   );

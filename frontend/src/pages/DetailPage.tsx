@@ -42,7 +42,7 @@ const DetailPage = () => {
             className="ml-auto rounded-lg"
             width="400"
           />
-          <div className="rating mt-10 ml-22 justify-end gap-12">
+          <div className="rating mt-10 mb-5 ml-22 justify-end gap-12">
             <div
               className="mask mask-star bg-base-content scale-250"
               aria-label="1 star"
@@ -76,7 +76,7 @@ const DetailPage = () => {
           <DetailText title="Categories:" content={details?.categories} />
           <DetailText title="Language:" content={details?.language} />
           <p className="my-5 mr-5 text-2xl">
-            <p className="font-bold">Description: </p>
+            <p className="font-bold underline">Description:</p>{" "}
             {details?.description}
           </p>
         </div>
