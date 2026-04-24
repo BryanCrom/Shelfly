@@ -12,6 +12,7 @@
   "dependencies": {
     "@algolia/autocomplete-js": "^1.19.4",
     "@algolia/autocomplete-theme-classic": "^1.19.4",
+    "@supabase/supabase-js": "^2.104.1",
     "@tabler/icons-react": "^3.35.0",
     "@tailwindcss/vite": "^4.1.17",
     "algoliasearch": "^5.43.0",

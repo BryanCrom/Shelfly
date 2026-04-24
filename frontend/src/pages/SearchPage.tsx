@@ -42,7 +42,7 @@ const SearchPage = () => {
   return (
     <div className="flex min-h-dvh flex-col items-center">
       <form onSubmit={handleSubmit}>
-        <div className="mx-auto mt-40 flex items-center justify-center">
+        <div className="mx-auto mt-44 flex items-center justify-center">
           <input
             className="input input-primary input-lg min-w-2xl"
             type="search"

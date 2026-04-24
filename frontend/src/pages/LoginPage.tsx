@@ -2,11 +2,11 @@ import { useRef } from "react";
 import { Link } from "react-router";
 
 const LoginPage = () => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const loginFormRef = useRef<HTMLFormElement>(null);
 
   return (
     <div className="grid h-screen place-content-center">
-      <form ref={formRef}>
+      <form ref={loginFormRef}>
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-lg gap-10 border p-10">
           <legend className="fieldset-legend text-base-content text-4xl">
             Login
