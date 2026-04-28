@@ -1,12 +1,33 @@
-import { useRef } from "react";
+import { useRef, type FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { supabaseClient } from "../utils/SupabaseUtil";
 
 const RegisterPage = () => {
   const registerFormRef = useRef<HTMLFormElement>(null);
 
+  const registerUser = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!registerFormRef.current) return;
+
+    const formData = new FormData(registerFormRef.current);
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: formData.get("email_input") as string,
+      password: formData.get("password_input") as string,
+      options: {
+        data: {
+          display_name: formData.get("name_input") as string,
+        },
+      },
+    });
+
+    console.log(data, error);
+  };
+
   return (
     <div className="grid h-screen place-content-center">
-      <form ref={registerFormRef}>
+      <form onSubmit={registerUser} ref={registerFormRef}>
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-lg gap-10 border p-10">
           <legend className="fieldset-legend text-base-content text-4xl">
             Register
@@ -56,10 +77,14 @@ const RegisterPage = () => {
 
           <div className="mx-auto flex gap-18">
             <Link to="/">
-              <button className="btn btn-primary w-28">Login</button>
+              <button type="button" className="btn btn-primary w-28">
+                Back
+              </button>
             </Link>
-            <Link to="/home">
-              <button className="btn btn-primary w-28">Enter</button>
+            <Link to="/">
+              <button type="submit" className="btn btn-primary w-28">
+                Enter
+              </button>
             </Link>
           </div>
         </fieldset>
