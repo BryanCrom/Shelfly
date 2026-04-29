@@ -1,28 +1,34 @@
 import { useRef, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
 
 const RegisterPage = () => {
   const registerFormRef = useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
 
   const registerUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!registerFormRef.current) return;
 
-    const formData = new FormData(registerFormRef.current);
+    const registerFormData = new FormData(registerFormRef.current);
 
     const { data, error } = await supabaseClient.auth.signUp({
-      email: formData.get("email_input") as string,
-      password: formData.get("password_input") as string,
+      email: registerFormData.get("email") as string,
+      password: registerFormData.get("password") as string,
       options: {
         data: {
-          display_name: formData.get("name_input") as string,
+          display_name: registerFormData.get("name") as string,
         },
       },
     });
 
-    console.log(data, error);
+    if (error) {
+      console.log("Supabase Auth Error: ", error);
+    } else {
+      console.log(data);
+      navigate("/");
+    }
   };
 
   return (
@@ -37,7 +43,7 @@ const RegisterPage = () => {
             <input
               className="input input-primary input-lg w-full"
               id="register_name_input"
-              name="name_input"
+              name="name"
               type="text"
               placeholder="Please enter your name"
               required
@@ -52,7 +58,7 @@ const RegisterPage = () => {
             <input
               className="input input-primary input-lg w-full"
               id="register_email_input"
-              name="email_input"
+              name="email"
               type="email"
               placeholder="Please enter an email"
               autoCorrect="email"
@@ -68,7 +74,7 @@ const RegisterPage = () => {
             <input
               className="input input-primary input-lg w-full"
               id="register_password_input"
-              name="password_input"
+              name="password"
               type="password"
               placeholder="Please enter a password"
               required
@@ -81,11 +87,9 @@ const RegisterPage = () => {
                 Back
               </button>
             </Link>
-            <Link to="/">
-              <button type="submit" className="btn btn-primary w-28">
-                Enter
-              </button>
-            </Link>
+            <button type="submit" className="btn btn-primary w-28">
+              Enter
+            </button>
           </div>
         </fieldset>
       </form>
