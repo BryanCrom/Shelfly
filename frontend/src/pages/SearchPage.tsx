@@ -1,11 +1,8 @@
 import { PoweredBy } from "react-instantsearch";
-
-import Result from "../components/Result";
-
 import { useState } from "react";
-
 import type { SearchItem } from "../types/SearchTypes";
 import toast from "react-hot-toast";
+import Result from "../components/Result";
 
 const SearchPage = () => {
   const [input, setInput] = useState<string>("");

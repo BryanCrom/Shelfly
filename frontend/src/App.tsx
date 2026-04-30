@@ -6,14 +6,20 @@ import DetailPage from "./pages/DetailPage";
 import LoginPage from "./pages/LoginPage";
 import Navbar from "./components/Navbar";
 import RegisterPage from "./pages/RegisterPage";
-import AuthWrapper from "./components/AuthWrapper";
+import { useAuth } from "./utils/ZustandUtil";
+import { useEffect } from "react";
+import AuthWrapper from "./lib/AuthWrapper";
 
 function App() {
+  useEffect(() => {
+    useAuth.getState().init();
+  }, []);
+
   return (
     <>
-      <Navbar />
       <Toaster />
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
