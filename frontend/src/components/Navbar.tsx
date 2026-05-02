@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
+import { useAuth } from "../utils/ZustandUtil";
 
 const Navbar = () => {
+  const authenticated = useAuth((state) => state.authenticated);
+  const loadingAuth = useAuth((state) => state.loading);
+
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -19,9 +23,11 @@ const Navbar = () => {
       <a className="btn btn-ghost text-primary font-serif text-6xl font-light">
         Shelfly
       </a>
-      <button onClick={handleSignOut} className="btn btn-primary mx-10">
-        Sign Out
-      </button>
+      {authenticated && !loadingAuth && (
+        <button onClick={handleSignOut} className="btn btn-primary mx-10">
+          Sign Out
+        </button>
+      )}
     </div>
   );
 };

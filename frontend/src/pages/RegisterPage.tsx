@@ -1,8 +1,9 @@
-import { useRef, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
 
 const RegisterPage = () => {
+  const [emailExists, setEmailExists] = useState<boolean>(false);
   const registerFormRef = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
 
@@ -18,13 +19,18 @@ const RegisterPage = () => {
       password: registerFormData.get("password") as string,
       options: {
         data: {
-          display_name: registerFormData.get("name") as string,
+          display_name: registerFormData.get("username") as string,
         },
       },
     });
 
     if (error) {
       console.log("Supabase Auth Error: ", error);
+      if (error.code === "user_already_exists") {
+        setEmailExists(true);
+      } else {
+        setEmailExists(false);
+      }
     } else {
       console.log(data);
       navigate("/");
@@ -34,16 +40,16 @@ const RegisterPage = () => {
   return (
     <div className="grid h-screen place-content-center">
       <form onSubmit={registerUser} ref={registerFormRef}>
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-lg gap-10 border p-10">
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-lg gap-4 border p-10">
           <legend className="fieldset-legend text-base-content text-4xl">
             Register
           </legend>
           <label id="register_name_input" className="text-base-content text-lg">
-            Name:
+            Username:
             <input
               className="input input-primary input-lg w-full"
-              id="register_name_input"
-              name="name"
+              id="register_username_input"
+              name="username"
               type="text"
               placeholder="Please enter your name"
               required
@@ -64,6 +70,12 @@ const RegisterPage = () => {
               autoCorrect="email"
               required
             />
+            <p
+              className="text-error text-lg"
+              style={{ visibility: emailExists ? "visible" : "hidden" }}
+            >
+              Email already exists
+            </p>
           </label>
 
           <label

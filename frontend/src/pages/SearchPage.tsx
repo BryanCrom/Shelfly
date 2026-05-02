@@ -3,8 +3,11 @@ import { useState } from "react";
 import type { SearchItem } from "../types/SearchTypes";
 import toast from "react-hot-toast";
 import Result from "../components/Result";
+import { useAuth } from "../utils/ZustandUtil";
 
 const SearchPage = () => {
+  const user = useAuth((state) => state.user);
+
   const [input, setInput] = useState<string>("");
   const [hits, setHits] = useState<SearchItem[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -15,7 +18,6 @@ const SearchPage = () => {
     }
 
     e.preventDefault();
-
     setLoading(true);
 
     try {
@@ -73,7 +75,7 @@ const SearchPage = () => {
             </div>
 
             <h1 className="text-primary m-6 text-center font-serif text-6xl">
-              {(!hits && "Welcome to Shelfly") ||
+              {(!hits && `Welcome ${user?.user_metadata?.display_name}`) ||
                 (hits && hits.length === 0 && "No Results")}
             </h1>
             <p className="text-base-content text-center text-lg">
