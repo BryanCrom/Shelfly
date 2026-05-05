@@ -1,39 +1,65 @@
 import { useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
   const [emailExists, setEmailExists] = useState<boolean>(false);
+  const [usernameExists, setUsernameExists] = useState<boolean>(false);
+  const [strongPassword, setStrongPassword] = useState<boolean>(true);
+
   const registerFormRef = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
 
   const registerUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    setEmailExists(false);
+    setUsernameExists(false);
+    setStrongPassword(true);
+
     if (!registerFormRef.current) return;
 
     const registerFormData = new FormData(registerFormRef.current);
+    const username = registerFormData.get("username") as string;
+
+    const { data: exists, error: usernameError } = await supabaseClient
+      .from("profiles")
+      .select("username")
+      .eq("username", username)
+      .maybeSingle();
+
+    if (usernameError) {
+      console.log("supabase username check error: ", usernameError);
+    }
+
+    if (exists) {
+      setUsernameExists(true);
+      return;
+    }
 
     const { data, error } = await supabaseClient.auth.signUp({
       email: registerFormData.get("email") as string,
       password: registerFormData.get("password") as string,
       options: {
         data: {
-          display_name: registerFormData.get("username") as string,
+          username: username,
         },
       },
     });
 
     if (error) {
-      console.log("Supabase Auth Error: ", error);
+      console.log("Supabase Auth Error: ", error.code);
       if (error.code === "user_already_exists") {
         setEmailExists(true);
+      } else if (error.code === "weak_password") {
+        setStrongPassword(false);
       } else {
-        setEmailExists(false);
+        toast.error("Something went wrong");
       }
     } else {
       console.log(data);
-      navigate("/");
+      navigate("/home");
     }
   };
 
@@ -54,6 +80,12 @@ const RegisterPage = () => {
               placeholder="Please enter your name"
               required
             />
+            <p
+              className="text-error text-lg"
+              style={{ visibility: usernameExists ? "visible" : "hidden" }}
+            >
+              Username already exists
+            </p>
           </label>
 
           <label
@@ -91,6 +123,12 @@ const RegisterPage = () => {
               placeholder="Please enter a password"
               required
             />
+            <p
+              className="text-error text-lg"
+              style={{ visibility: strongPassword ? "hidden" : "visible" }}
+            >
+              Weak Password
+            </p>
           </label>
 
           <div className="mx-auto flex gap-18">
