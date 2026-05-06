@@ -66,7 +66,7 @@ const RegisterPage = () => {
   return (
     <div className="grid h-screen place-content-center">
       <form onSubmit={registerUser} ref={registerFormRef}>
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-lg gap-4 border p-10">
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-lg gap-2 border p-10">
           <legend className="fieldset-legend text-base-content text-4xl">
             Register
           </legend>
@@ -127,7 +127,9 @@ const RegisterPage = () => {
               className="text-error text-lg"
               style={{ visibility: strongPassword ? "hidden" : "visible" }}
             >
-              Weak Password
+              Password must be at least 6 characters long and must contain at
+              least one uppercase letter, one lowercase letter, one number, and
+              one symbol.
             </p>
           </label>
 

@@ -6,7 +6,7 @@ import Result from "../components/Result";
 import { useAuth } from "../utils/ZustandUtil";
 
 const SearchPage = () => {
-  const user = useAuth((state) => state.user);
+  const profile = useAuth((state) => state.profile);
 
   const [input, setInput] = useState<string>("");
   const [hits, setHits] = useState<SearchItem[] | null>(null);
@@ -75,7 +75,7 @@ const SearchPage = () => {
             </div>
 
             <h1 className="text-primary m-6 text-center font-serif text-6xl">
-              {(!hits && `Welcome ${user?.user_metadata?.display_name}`) ||
+              {(!hits && `Welcome ${profile?.username}`) ||
                 (hits && hits.length === 0 && "No Results")}
             </h1>
             <p className="text-base-content text-center text-lg">
