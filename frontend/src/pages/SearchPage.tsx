@@ -69,7 +69,7 @@ const SearchPage = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-5 justify-items-center gap-10">
+            <div className="mt-10 grid grid-cols-5 justify-items-center gap-10">
               {hits &&
                 hits.map((hit) => <Result item={hit} key={hit.objectID} />)}
             </div>
