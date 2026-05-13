@@ -6,7 +6,7 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
   const loadingAuth = useAuth((state) => state.loading);
 
   if (!loadingAuth && !authenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return children;

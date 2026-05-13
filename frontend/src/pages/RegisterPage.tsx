@@ -59,7 +59,7 @@ const RegisterPage = () => {
       }
     } else {
       console.log(data);
-      navigate("/home");
+      navigate("/");
     }
   };
 
@@ -134,7 +134,7 @@ const RegisterPage = () => {
           </label>
 
           <div className="mx-auto flex gap-18">
-            <Link to="/">
+            <Link to="/login">
               <button type="button" className="btn btn-primary w-28">
                 Back
               </button>

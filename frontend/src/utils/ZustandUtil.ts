@@ -28,31 +28,41 @@ export const useAuth = create<AuthState>()((set) => ({
       error,
     } = await supabaseClient.auth.getSession();
 
-    const { data: initialProfile } = await supabaseClient
-      .from("profiles")
-      .select("*")
-      .eq("id", initialSession?.user.id)
-      .single<Profile>();
+    if (initialSession) {
+      const { data: initialProfile } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", initialSession?.user.id)
+        .single<Profile>();
+
+      set({ profile: initialProfile });
+    } else {
+      set({ profile: null });
+    }
 
     set({
       authenticated: !!initialSession,
       user: initialSession?.user ?? null,
-      profile: initialProfile,
       loading: false,
     });
     if (error) console.log("Supabase Auth Error: ", error);
 
     supabaseClient.auth.onAuthStateChange(async (_event, currentSession) => {
-      const { data: currentProfile } = await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", currentSession?.user.id)
-        .single<Profile>();
+      if (currentSession) {
+        const { data: currentProfile } = await supabaseClient
+          .from("profiles")
+          .select("*")
+          .eq("id", currentSession?.user.id)
+          .single<Profile>();
+
+        set({ profile: currentProfile });
+      } else {
+        set({ profile: null });
+      }
 
       set({
         authenticated: !!currentSession,
         user: currentSession?.user ?? null,
-        profile: currentProfile,
         loading: false,
       });
     });

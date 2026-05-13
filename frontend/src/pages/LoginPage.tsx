@@ -32,7 +32,7 @@ const LoginPage = () => {
       }
     } else {
       console.log(data);
-      navigate("/home");
+      navigate("/");
     }
 
     setLoading(false);
@@ -81,7 +81,11 @@ const LoginPage = () => {
 
           <div className="mx-auto flex gap-18">
             <Link to="/register">
-              <button type="button" className="btn btn-primary w-28">
+              <button
+                type="button"
+                className="btn btn-primary w-28"
+                disabled={loading}
+              >
                 Register
               </button>
             </Link>

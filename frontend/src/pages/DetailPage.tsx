@@ -1,14 +1,18 @@
+import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { SearchItem } from "../types/SearchTypes";
-import toast from "react-hot-toast";
+import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+
 import DetailText from "../components/DetailText";
 import Reviews from "../components/Reviews";
 
+import type { SearchItem } from "../types/SearchTypes";
+import LeaveReview from "../components/LeaveReview";
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
   const [details, setDetails] = useState<SearchItem | null>(null);
+  const [openDescription, setOpenDescription] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -36,7 +40,7 @@ const DetailPage = () => {
       <h1 className="text-base-content my-18 text-center text-6xl font-bold">
         {details?.title}
       </h1>
-      <div className="mb-10 flex justify-evenly">
+      <div className="mb-5 flex justify-evenly">
         <div>
           <img
             src={details?.coverURL}
@@ -65,6 +69,14 @@ const DetailPage = () => {
               aria-label="5 star"
             />
           </div>
+          <label htmlFor="review_modal" className="btn btn-neutral w-full">
+            Review
+          </label>
+
+          <input type="checkbox" id="review_modal" className="modal-toggle" />
+          <div className="modal" role="dialog">
+            <LeaveReview />
+          </div>
         </div>
 
         <div>
@@ -80,10 +92,30 @@ const DetailPage = () => {
         </div>
       </div>
       <div className="divider divider-neutral mx-10" />
-      <p className="mx-10 text-2xl">
-        <p className="font-bold underline">Description:</p>{" "}
-        {details?.description}
-      </p>
+      <button
+        onClick={() => setOpenDescription(!openDescription)}
+        className="hover:bg-base-100 mx-10 rounded-2xl p-4"
+      >
+        {openDescription ? (
+          <p className="mx-10 truncate text-left text-2xl">
+            <p className="flex justify-between text-left font-bold underline">
+              Description:
+              <IconChevronDown size={35} />
+            </p>{" "}
+            {details?.description}
+          </p>
+        ) : (
+          <p className="mx-10 text-left text-2xl">
+            <p className="flex justify-between text-left font-bold underline">
+              Description:
+              <IconChevronUp size={35} />
+            </p>{" "}
+            {details?.description}
+          </p>
+        )}
+      </button>
+
+      <div className="divider divider-neutral mx-10" />
 
       <Reviews />
     </div>
