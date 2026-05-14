@@ -69,14 +69,21 @@ const DetailPage = () => {
               aria-label="5 star"
             />
           </div>
-          <label htmlFor="review_modal" className="btn btn-neutral w-full">
-            Review
-          </label>
 
-          <input type="checkbox" id="review_modal" className="modal-toggle" />
-          <div className="modal" role="dialog">
+          <button
+            className="btn btn-neutral w-full"
+            onClick={() =>
+              (
+                document.getElementById("review_modal") as HTMLDialogElement
+              ).showModal()
+            }
+          >
+            Review
+          </button>
+
+          <dialog id="review_modal" className="modal">
             <LeaveReview />
-          </div>
+          </dialog>
         </div>
 
         <div>
@@ -98,18 +105,18 @@ const DetailPage = () => {
       >
         {openDescription ? (
           <p className="mx-10 truncate text-left text-2xl">
-            <p className="flex justify-between text-left font-bold underline">
+            <span className="flex justify-between text-left font-bold underline">
               Description:
               <IconChevronDown size={35} />
-            </p>{" "}
+            </span>{" "}
             {details?.description}
           </p>
         ) : (
           <p className="mx-10 text-left text-2xl">
-            <p className="flex justify-between text-left font-bold underline">
+            <span className="flex justify-between text-left font-bold underline">
               Description:
               <IconChevronUp size={35} />
-            </p>{" "}
+            </span>{" "}
             {details?.description}
           </p>
         )}
