@@ -1,18 +1,17 @@
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 import DetailText from "../components/DetailText";
 import Reviews from "../components/Reviews";
 
 import type { SearchItem } from "../types/SearchTypes";
 import LeaveReview from "../components/LeaveReview";
+import DescriptionWidget from "../components/DescriptionWidget";
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
   const [details, setDetails] = useState<SearchItem | null>(null);
-  const [openDescription, setOpenDescription] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -99,28 +98,8 @@ const DetailPage = () => {
         </div>
       </div>
       <div className="divider divider-neutral mx-10" />
-      <button
-        onClick={() => setOpenDescription(!openDescription)}
-        className="hover:bg-base-100 mx-10 rounded-2xl p-4"
-      >
-        {openDescription ? (
-          <p className="mx-10 truncate text-left text-2xl">
-            <span className="flex justify-between text-left font-bold underline">
-              Description:
-              <IconChevronDown size={35} />
-            </span>{" "}
-            {details?.description}
-          </p>
-        ) : (
-          <p className="mx-10 text-left text-2xl">
-            <span className="flex justify-between text-left font-bold underline">
-              Description:
-              <IconChevronUp size={35} />
-            </span>{" "}
-            {details?.description}
-          </p>
-        )}
-      </button>
+
+      <DescriptionWidget description={details?.description} />
 
       <div className="divider divider-neutral mx-10" />
 
