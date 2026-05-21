@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
-import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import ReviewDescriptionWidget from "./ReviewDescriptionWidget";
 
-interface Review {
+export interface Review {
   id: number;
   rating: number;
   description: string;
@@ -15,25 +15,10 @@ interface Review {
 
 const Reviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [openReviews, setOpenReviews] = useState<Set<number>>(new Set());
 
   const { id } = useParams();
 
   const stars = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
-
-  const toggleReview = (id: number) => {
-    setOpenReviews((prev) => {
-      const next = new Set(prev);
-
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-
-      return next;
-    });
-  };
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -42,7 +27,9 @@ const Reviews = () => {
         .select(
           "id, rating, description, created_at, profiles!user_id(username)",
         )
-        .eq("book_id", id);
+        .order("created_at", { ascending: false })
+        .eq("book_id", id)
+        .limit(3);
 
       if (error) {
         console.log("error fetching reviews:", error);
@@ -63,6 +50,7 @@ const Reviews = () => {
 
   return (
     <div>
+      <h1 className="mb-4 text-center text-3xl font-bold underline">Reviews</h1>
       <ul>
         {reviews.map((review) => {
           return (
@@ -80,7 +68,7 @@ const Reviews = () => {
                     {stars.map((star) => (
                       <div
                         key={star}
-                        className={`mask mask-star bg-primary ${star % 1 === 0.5 ? "mask-half-1" : "mask-half-2"}`}
+                        className={`mask mask-star bg-base-content ${star % 1 === 0.5 ? "mask-half-1" : "mask-half-2"}`}
                         aria-label={`${star} star`}
                         aria-checked={star === review.rating}
                       />
@@ -88,23 +76,7 @@ const Reviews = () => {
                   </div>
 
                   {review.description.length > 0 && (
-                    <button
-                      type="button"
-                      className="hover:bg-base-100 w-full rounded-xl p-2 text-left"
-                      onClick={() => toggleReview(review.id)}
-                    >
-                      {openReviews.has(review.id) ? (
-                        <>
-                          <IconChevronDown />
-                          <p className="truncate">{review.description}</p>
-                        </>
-                      ) : (
-                        <>
-                          <IconChevronUp />
-                          <p className="break-all">{review.description}</p>
-                        </>
-                      )}
-                    </button>
+                    <ReviewDescriptionWidget review={review} />
                   )}
                 </div>
               </div>
