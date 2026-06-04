@@ -75,7 +75,9 @@ const SearchPage = () => {
             </div>
 
             <h1 className="text-primary m-6 text-center font-serif text-6xl">
-              {(!hits && `Welcome ${profile?.username}`) ||
+              {(!hits &&
+                profile?.username !== undefined &&
+                `Welcome ${profile?.username}`) ||
                 (hits && hits.length === 0 && "No Results")}
             </h1>
             <p className="text-base-content text-center text-lg">

@@ -3,10 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
 import toast from "react-hot-toast";
 
+interface RegisterErrorObject {
+  emailExists?: boolean;
+}
+
 const RegisterPage = () => {
-  const [emailExists, setEmailExists] = useState<boolean>(false);
   const [usernameExists, setUsernameExists] = useState<boolean>(false);
   const [strongPassword, setStrongPassword] = useState<boolean>(true);
+
+  const [registerErrors, setRegisterErrors] = useState<RegisterErrorObject>({});
 
   const registerFormRef = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
@@ -14,7 +19,8 @@ const RegisterPage = () => {
   const registerUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setEmailExists(false);
+    setRegisterErrors({});
+
     setUsernameExists(false);
     setStrongPassword(true);
 
@@ -22,6 +28,11 @@ const RegisterPage = () => {
 
     const registerFormData = new FormData(registerFormRef.current);
     const username = registerFormData.get("username") as string;
+
+    if (/\s/.test(username)) {
+      console.log("Error: no whitespace characters allowed in username.");
+      return;
+    }
 
     const { data: exists, error: usernameError } = await supabaseClient
       .from("profiles")
@@ -48,18 +59,19 @@ const RegisterPage = () => {
       },
     });
 
-    if (error) {
-      console.log("Supabase Auth Error: ", error.code);
-      if (error.code === "user_already_exists") {
-        setEmailExists(true);
-      } else if (error.code === "weak_password") {
-        setStrongPassword(false);
-      } else {
-        toast.error("Something went wrong");
-      }
-    } else {
+    if (!error) {
       console.log(data);
       navigate("/");
+    }
+
+    console.log("Supabase Auth Error: ", error?.code);
+    if (error?.code === "user_already_exists") {
+      setRegisterErrors({ emailExists: true });
+      console.log(registerErrors.emailExists);
+    } else if (error?.code === "weak_password") {
+      setStrongPassword(false);
+    } else {
+      toast.error("Something went wrong");
     }
   };
 
@@ -104,7 +116,9 @@ const RegisterPage = () => {
             />
             <p
               className="text-error text-lg"
-              style={{ visibility: emailExists ? "visible" : "hidden" }}
+              style={{
+                visibility: registerErrors.emailExists ? "visible" : "hidden",
+              }}
             >
               Email already exists
             </p>

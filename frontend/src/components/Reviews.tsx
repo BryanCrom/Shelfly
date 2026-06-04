@@ -52,38 +52,44 @@ const Reviews = () => {
     <div>
       <h1 className="mb-4 text-center text-3xl font-bold underline">Reviews</h1>
       <ul>
-        {reviews.map((review) => {
-          return (
-            <li key={review.id} className="mx-10">
-              <div className="text-lg">
-                <div>
-                  <p className="flex justify-between px-2 underline">
-                    {review.profiles.username}
-                    <span>
-                      {new Date(review.created_at).toLocaleDateString()}
-                    </span>
-                  </p>
+        {reviews.length === 0 ? (
+          <div className="my-10 flex justify-center text-xl">
+            <h1>There are currently no reviews for this book</h1>
+          </div>
+        ) : (
+          reviews.map((review) => {
+            return (
+              <li key={review.id} className="mx-10">
+                <div className="text-lg">
+                  <div>
+                    <p className="flex justify-between px-2 underline">
+                      {review.profiles.username}
+                      <span>
+                        {new Date(review.created_at).toLocaleDateString()}
+                      </span>
+                    </p>
 
-                  <div className="rating rating-half rating-lg p-2">
-                    {stars.map((star) => (
-                      <div
-                        key={star}
-                        className={`mask mask-star bg-base-content ${star % 1 === 0.5 ? "mask-half-1" : "mask-half-2"}`}
-                        aria-label={`${star} star`}
-                        aria-checked={star === review.rating}
-                      />
-                    ))}
+                    <div className="rating rating-half rating-lg p-2">
+                      {stars.map((star) => (
+                        <div
+                          key={star}
+                          className={`mask mask-star bg-base-content ${star % 1 === 0.5 ? "mask-half-1" : "mask-half-2"}`}
+                          aria-label={`${star} star`}
+                          aria-checked={star === review.rating}
+                        />
+                      ))}
+                    </div>
+
+                    {review.description.length > 0 && (
+                      <ReviewDescriptionWidget review={review} />
+                    )}
                   </div>
-
-                  {review.description.length > 0 && (
-                    <ReviewDescriptionWidget review={review} />
-                  )}
                 </div>
-              </div>
-              <div className="divider" />
-            </li>
-          );
-        })}
+                <div className="divider" />
+              </li>
+            );
+          })
+        )}
       </ul>
     </div>
   );
