@@ -5,13 +5,14 @@ import toast from "react-hot-toast";
 
 interface RegisterErrorObject {
   emailExists?: boolean;
+  usernameExists?: boolean;
+  weakPassword?: boolean;
+  containsWhitespace?: boolean;
 }
 
 const RegisterPage = () => {
-  const [usernameExists, setUsernameExists] = useState<boolean>(false);
-  const [strongPassword, setStrongPassword] = useState<boolean>(true);
-
   const [registerErrors, setRegisterErrors] = useState<RegisterErrorObject>({});
+  const [loading, setLoading] = useState<boolean>(false);
 
   const registerFormRef = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
@@ -19,59 +20,66 @@ const RegisterPage = () => {
   const registerUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setRegisterErrors({});
+    setLoading(true);
 
-    setUsernameExists(false);
-    setStrongPassword(true);
+    try {
+      setRegisterErrors({});
 
-    if (!registerFormRef.current) return;
+      if (!registerFormRef.current) return;
 
-    const registerFormData = new FormData(registerFormRef.current);
-    const username = registerFormData.get("username") as string;
+      const registerFormData = new FormData(registerFormRef.current);
+      const username = registerFormData.get("username") as string;
 
-    if (/\s/.test(username)) {
-      console.log("Error: no whitespace characters allowed in username.");
-      return;
-    }
+      if (/\s/.test(username)) {
+        console.log("Error: no whitespace characters allowed in username.");
+        setRegisterErrors({ containsWhitespace: true });
+        return;
+      }
 
-    const { data: exists, error: usernameError } = await supabaseClient
-      .from("profiles")
-      .select("username")
-      .eq("username", username)
-      .maybeSingle();
+      const { data: exists, error: usernameError } = await supabaseClient
+        .from("profiles")
+        .select("username")
+        .eq("username", username)
+        .maybeSingle();
 
-    if (usernameError) {
-      console.log("supabase username check error: ", usernameError);
-    }
+      if (usernameError) {
+        console.log("supabase username check error: ", usernameError);
+        return;
+      }
 
-    if (exists) {
-      setUsernameExists(true);
-      return;
-    }
+      if (exists) {
+        setRegisterErrors({ usernameExists: true });
+        return;
+      }
 
-    const { data, error } = await supabaseClient.auth.signUp({
-      email: registerFormData.get("email") as string,
-      password: registerFormData.get("password") as string,
-      options: {
-        data: {
-          username: username,
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: registerFormData.get("email") as string,
+        password: registerFormData.get("password") as string,
+        options: {
+          data: {
+            username: username,
+          },
         },
-      },
-    });
+      });
 
-    if (!error) {
-      console.log(data);
-      navigate("/");
-    }
+      if (!error) {
+        console.log(data);
+        navigate("/");
+      }
 
-    console.log("Supabase Auth Error: ", error?.code);
-    if (error?.code === "user_already_exists") {
-      setRegisterErrors({ emailExists: true });
-      console.log(registerErrors.emailExists);
-    } else if (error?.code === "weak_password") {
-      setStrongPassword(false);
-    } else {
-      toast.error("Something went wrong");
+      console.log("Supabase Auth Error: ", error?.code);
+
+      if (error?.code === "user_already_exists") {
+        setRegisterErrors({ emailExists: true });
+      } else if (error?.code === "weak_password") {
+        setRegisterErrors({ weakPassword: true });
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.log("Error registerUser function:" + error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,9 +102,17 @@ const RegisterPage = () => {
             />
             <p
               className="text-error text-lg"
-              style={{ visibility: usernameExists ? "visible" : "hidden" }}
+              style={{
+                visibility:
+                  registerErrors.usernameExists ||
+                  registerErrors.containsWhitespace
+                    ? "visible"
+                    : "hidden",
+              }}
             >
-              Username already exists
+              {registerErrors.containsWhitespace
+                ? "Username cannot contain any whitespace characters"
+                : "Username already exists"}
             </p>
           </label>
 
@@ -139,7 +155,9 @@ const RegisterPage = () => {
             />
             <p
               className="text-error text-lg"
-              style={{ visibility: strongPassword ? "hidden" : "visible" }}
+              style={{
+                visibility: registerErrors.weakPassword ? "visible" : "hidden",
+              }}
             >
               Password must be at least 6 characters long and must contain at
               least one uppercase letter, one lowercase letter, one number, and
@@ -149,11 +167,19 @@ const RegisterPage = () => {
 
           <div className="mx-auto flex gap-18">
             <Link to="/login">
-              <button type="button" className="btn btn-primary w-28">
+              <button
+                type="button"
+                className="btn btn-primary w-28"
+                disabled={loading}
+              >
                 Back
               </button>
             </Link>
-            <button type="submit" className="btn btn-primary w-28">
+            <button
+              type="submit"
+              className="btn btn-primary w-28"
+              disabled={loading}
+            >
               Enter
             </button>
           </div>

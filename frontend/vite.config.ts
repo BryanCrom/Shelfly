@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      "/search": "http://localhost:8080",
-      "/get": "http://localhost:8080",
+      "/search": "http://localhost:3000",
+      "/get": "http://localhost:3000",
     },
   },
 });

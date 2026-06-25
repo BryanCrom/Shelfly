@@ -14,28 +14,32 @@ const LoginPage = () => {
     event.preventDefault();
     setLoading(true);
 
-    if (!loginFormRef.current) return;
+    try {
+      if (!loginFormRef.current) return;
 
-    const loginFormData = new FormData(loginFormRef.current);
+      const loginFormData = new FormData(loginFormRef.current);
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email: loginFormData.get("email") as string,
-      password: loginFormData.get("password") as string,
-    });
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: loginFormData.get("email") as string,
+        password: loginFormData.get("password") as string,
+      });
 
-    if (error) {
-      console.log("Supabase Auth Error: ", error);
-      if (error.code === "invalid_credentials") {
-        setInvalidCredentials(true);
+      if (error) {
+        console.log("Supabase Auth Error: ", error);
+        if (error.code === "invalid_credentials") {
+          setInvalidCredentials(true);
+        } else {
+          setInvalidCredentials(false);
+        }
       } else {
-        setInvalidCredentials(false);
+        console.log(data);
+        navigate("/");
       }
-    } else {
-      console.log(data);
-      navigate("/");
+    } catch (error) {
+      console.log("Error LoginUser function:" + error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

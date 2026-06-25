@@ -33,9 +33,9 @@ const SearchPage = () => {
           color: "#1b1717",
         },
       });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
