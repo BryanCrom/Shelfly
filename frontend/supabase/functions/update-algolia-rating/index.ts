@@ -2,14 +2,12 @@ import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
 
 export default {
-  fetch: withSupabase({ auth: "none" }, async (req) => {
+  fetch: withSupabase({ auth: "none" }, async () => {
     try {
-      const data = await req.json();
+      const algoliaApiKey = Deno.env.get("ALGOLIA_WRITE_KEY")!;
+      const algoliaApplicationId = Deno.env.get("ALGOLIA_APPLICATION_ID")!;
 
-      const algoliaApiKey = Deno.env.get("x-algolia-api-key")!;
-      const algoliaApplicationKey = Deno.env.get("x-algolia-application-id")!;
-
-      fetch(
+      await fetch(
         "https://data.eu.algolia.com/2/tasks/7e91d236-495e-4bad-bd9e-7f2292badc15/run",
         {
           method: "POST",
@@ -17,15 +15,14 @@ export default {
             "accept": "application/json",
             "content-type": "application/json",
             "x-algolia-api-key": algoliaApiKey,
-            "x-algolia-application-id": algoliaApplicationKey,
+            "x-algolia-application-id": algoliaApplicationId,
           },
-          body:
-            `{"runMetadata": {"avg_rating": ${data.record.avg_rating}, "book_id": ${data.record.book_id}, "review_count": ${data.record.review_count}}`,
+          body: "",
         },
       );
 
       return Response.json({
-        message: "Success",
+        message: "success",
       });
     } catch (error) {
       return Response.json({ message: error });
