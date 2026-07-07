@@ -8,6 +8,7 @@ import Reviews from "../components/Reviews";
 import type { SearchItem } from "../types/SearchTypes";
 import LeaveReview from "../components/LeaveReview";
 import DescriptionWidget from "../components/DescriptionWidget";
+import RatingStars from "../components/RatingStars";
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -18,6 +19,7 @@ const DetailPage = () => {
       try {
         const response = await fetch(`/get/${id}`);
         const data: SearchItem = await response.json();
+        console.log(data);
         setDetails(data);
       } catch (error) {
         console.log("Failed to get details: " + error);
@@ -46,28 +48,7 @@ const DetailPage = () => {
             className="mx-auto rounded-lg"
             width="200"
           />
-          <div className="rating my-5 flex justify-center gap-4">
-            <div
-              className="mask mask-star bg-base-content scale-150"
-              aria-label="1 star"
-            />
-            <div
-              className="mask mask-star bg-base-content scale-150"
-              aria-label="2 star"
-            />
-            <div
-              className="mask mask-star bg-base-content scale-150"
-              aria-label="3 star"
-            />
-            <div
-              className="mask mask-star bg-base-content scale-150"
-              aria-label="4 star"
-            />
-            <div
-              className="mask mask-star bg-base-content scale-150"
-              aria-label="5 star"
-            />
-          </div>
+          <RatingStars rating={details?.avgRating} />
 
           <button
             className="btn btn-neutral w-full"

@@ -11,4 +11,6 @@ export interface SearchItem extends AlgoliaHit {
   categories: string[];
   coverURL: string;
   language: string;
+  avgRating: number;
+  reviewCount: number;
 }

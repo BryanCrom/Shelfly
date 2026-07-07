@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { SearchItem } from "../types/SearchTypes";
+import RatingStars from "./RatingStars";
 
 interface ResultProps {
   item: SearchItem;
@@ -23,28 +24,7 @@ const Result = ({ item }: ResultProps) => {
             </p>
           </div>
 
-          <div className="rating flex items-center justify-center">
-            <div
-              className="mask mask-star bg-base-content"
-              aria-label="1 star"
-            />
-            <div
-              className="mask mask-star bg-base-content"
-              aria-label="2 star"
-            />
-            <div
-              className="mask mask-star bg-base-content"
-              aria-label="3 star"
-            />
-            <div
-              className="mask mask-star bg-base-content"
-              aria-label="4 star"
-            />
-            <div
-              className="mask mask-star bg-base-content"
-              aria-label="5 star"
-            />
-          </div>
+          <RatingStars rating={item.avgRating} />
         </div>
       </div>
     </Link>

@@ -1,6 +1,6 @@
 /*
 Author: Bryan Crombach
-Purpose: book object denotes the shape of the search hit
+Purpose: book object denotes the shape of the algolia ingest data
  */
 
 package com.bryan_crombach.backend.models;
@@ -21,5 +21,4 @@ public class Book {
     private String[] Categories;
     private String coverURL;
     private String language;
-
 }

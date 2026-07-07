@@ -9,6 +9,7 @@ import com.algolia.search.models.indexing.Query;
 import com.algolia.search.models.indexing.SearchResult;
 import com.bryan_crombach.backend.models.Book;
 import com.algolia.search.SearchIndex;
+import com.bryan_crombach.backend.models.BookResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,19 +17,21 @@ import java.util.List;
 @Service
 public class AlgoliaService {
 
-    private final SearchIndex<Book> algoliaIndex;
+    private final SearchIndex<BookResponse> algoliaReadIndex;
+    private final SearchIndex<Book> algoliaWriteIndex;
 
-    public AlgoliaService(SearchIndex<Book> algoliaIndex) {
-        this.algoliaIndex = algoliaIndex;
+    public AlgoliaService(SearchIndex<BookResponse> algoliaReadIndex, SearchIndex<Book> algoliaWriteIndex ) {
+        this.algoliaReadIndex = algoliaReadIndex;
+        this.algoliaWriteIndex = algoliaWriteIndex;
     }
 
     public void saveBooks(List<Book> books) {
-        algoliaIndex.saveObjects(books).waitTask();
+        algoliaWriteIndex.partialUpdateObjects(books).waitTask();
     }
 
-    public SearchResult<Book> searchBooks(String query) { return algoliaIndex.search(new Query(query)); }
+    public SearchResult<BookResponse> searchBooks(String query) { return algoliaReadIndex.search(new Query(query)); }
 
-    public Book getBook(String ObjectId) {
-        return algoliaIndex.getObject(ObjectId);
+    public BookResponse getBook(String ObjectId) {
+        return algoliaReadIndex.getObject(ObjectId);
     }
 }

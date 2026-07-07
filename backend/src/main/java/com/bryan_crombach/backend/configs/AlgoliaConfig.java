@@ -9,6 +9,7 @@ import com.algolia.search.DefaultSearchClient;
 import com.algolia.search.SearchClient;
 import com.algolia.search.SearchIndex;
 import com.bryan_crombach.backend.models.Book;
+import com.bryan_crombach.backend.models.BookResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,11 @@ public class AlgoliaConfig {
     }
 
     @Bean
-    public SearchIndex<Book> algoliaIndex(SearchClient client) {
+    public SearchIndex<Book> algoliaWriteIndex(SearchClient client) {
         return client.initIndex(indexName, Book.class);
+    }
+    @Bean
+    public SearchIndex<BookResponse> algoliaReadIndex(SearchClient client) {
+        return client.initIndex(indexName, BookResponse.class);
     }
 }

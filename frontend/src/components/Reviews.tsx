@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
 import ReviewDescriptionWidget from "./ReviewDescriptionWidget";
+import RatingStars from "./RatingStars";
 
 export interface Review {
   id: number;
@@ -17,8 +18,6 @@ const Reviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
 
   const { id } = useParams();
-
-  const stars = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -69,16 +68,7 @@ const Reviews = () => {
                       </span>
                     </p>
 
-                    <div className="rating rating-half rating-lg p-2">
-                      {stars.map((star) => (
-                        <div
-                          key={star}
-                          className={`mask mask-star bg-base-content ${star % 1 === 0.5 ? "mask-half-1" : "mask-half-2"}`}
-                          aria-label={`${star} star`}
-                          aria-checked={star === review.rating}
-                        />
-                      ))}
-                    </div>
+                    <RatingStars rating={review.rating} />
 
                     {review.description.length > 0 && (
                       <ReviewDescriptionWidget review={review} />

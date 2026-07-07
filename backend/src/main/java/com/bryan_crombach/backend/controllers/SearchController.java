@@ -7,7 +7,7 @@ package com.bryan_crombach.backend.controllers;
 
 import com.algolia.search.models.indexing.SearchResult;
 import com.bryan_crombach.backend.mappers.GoogleBooksMapper;
-import com.bryan_crombach.backend.models.Book;
+import com.bryan_crombach.backend.models.BookResponse;
 import com.bryan_crombach.backend.models.GoogleBooksResponse;
 import com.bryan_crombach.backend.services.AlgoliaService;
 import com.bryan_crombach.backend.services.GoogleBooksService;
@@ -28,7 +28,7 @@ public class SearchController {
     }
 
     @RequestMapping("/search")
-    public SearchResult<Book> search(@RequestParam String q) {
+    public SearchResult<BookResponse> search(@RequestParam String q) {
         System.out.println("Searching for: " + q);
 
         GoogleBooksResponse response = googleBooksService.search(q);
@@ -39,7 +39,7 @@ public class SearchController {
     }
 
     @RequestMapping("/get/{id}")
-    public Book get(@PathVariable String id) {
+    public BookResponse get(@PathVariable String id) {
         System.out.println("fetching details of: " + id);
 
         return algoliaService.getBook(id);

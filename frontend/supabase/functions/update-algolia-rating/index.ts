@@ -8,7 +8,7 @@ export default {
       const algoliaApplicationId = Deno.env.get("ALGOLIA_APPLICATION_ID")!;
 
       await fetch(
-        "https://data.eu.algolia.com/2/tasks/7e91d236-495e-4bad-bd9e-7f2292badc15/run",
+        "https://data.eu.algolia.com/2/tasks/994123bd-40b0-46ae-bcdd-6229bb46b9fb/run",
         {
           method: "POST",
           headers: {
