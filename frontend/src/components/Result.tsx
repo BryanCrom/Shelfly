@@ -24,7 +24,10 @@ const Result = ({ item }: ResultProps) => {
             </p>
           </div>
 
-          <RatingStars rating={item.avgRating} />
+          <RatingStars
+            rating={item.avgRating}
+            className="rating rating-half flex items-center justify-center"
+          />
         </div>
       </div>
     </Link>

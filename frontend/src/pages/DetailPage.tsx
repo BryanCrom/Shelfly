@@ -48,7 +48,10 @@ const DetailPage = () => {
             className="mx-auto rounded-lg"
             width="200"
           />
-          <RatingStars rating={details?.avgRating} />
+          <RatingStars
+            rating={details?.avgRating}
+            className="rating rating-half rating-xl m-3 flex scale-125 justify-center"
+          />
 
           <button
             className="btn btn-neutral w-full"

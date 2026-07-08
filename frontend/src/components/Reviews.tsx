@@ -68,7 +68,10 @@ const Reviews = () => {
                       </span>
                     </p>
 
-                    <RatingStars rating={review.rating} />
+                    <RatingStars
+                      rating={review.rating}
+                      className="rating rating-half rating-lg p-2"
+                    />
 
                     {review.description.length > 0 && (
                       <ReviewDescriptionWidget review={review} />
