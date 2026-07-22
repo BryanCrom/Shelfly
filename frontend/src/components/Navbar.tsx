@@ -3,6 +3,7 @@ import { IconBook } from "@tabler/icons-react";
 import { supabaseClient } from "../utils/SupabaseUtil";
 import { useAuth } from "../utils/ZustandUtil";
 import { useState } from "react";
+import ProfileData from "./ProfileData";
 
 const Navbar = () => {
   const authenticated = useAuth((state) => state.authenticated);
@@ -35,13 +36,30 @@ const Navbar = () => {
         <IconBook size={64} />
       </Link>
       {authenticated && !loadingAuth && (
-        <button
-          onClick={handleSignOut}
-          className="btn btn-primary mx-10"
-          disabled={loading}
-        >
-          Sign Out
-        </button>
+        <>
+          <div className="avatar avatar-placeholder dropdown dropdown-center dropdown-bottom">
+            <div
+              className="bg-neutral text-neutral-content hover:border-neutral-content mx-10 w-16 rounded-full text-3xl hover:border-2"
+              role="button"
+              tabIndex={0}
+            >
+              <span>B</span>
+            </div>
+            <ul
+              tabIndex={-1}
+              className="dropdown-content menu bg-base-100 border-base-200 my-4 flex w-full rounded-lg border p-2 shadow-sm"
+            >
+              <ProfileData />
+              <button
+                onClick={handleSignOut}
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                Sign Out
+              </button>
+            </ul>
+          </div>
+        </>
       )}
     </div>
   );

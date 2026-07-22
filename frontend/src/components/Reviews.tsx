@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabaseClient } from "../utils/SupabaseUtil";
-import ReviewDescriptionWidget from "./ReviewDescriptionWidget";
 import RatingStars from "./RatingStars";
+import Description from "./Description";
 
 export interface Review {
   id: number;
@@ -74,7 +74,7 @@ const Reviews = () => {
                     />
 
                     {review.description.length > 0 && (
-                      <ReviewDescriptionWidget review={review} />
+                      <Description description={review.description} />
                     )}
                   </div>
                 </div>

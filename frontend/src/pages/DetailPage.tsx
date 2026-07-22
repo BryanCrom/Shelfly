@@ -4,11 +4,12 @@ import { useParams } from "react-router-dom";
 
 import DetailText from "../components/DetailText";
 import Reviews from "../components/Reviews";
+import LeaveReview from "../components/LeaveReview";
+import RatingStars from "../components/RatingStars";
+import Description from "../components/Description";
 
 import type { SearchItem } from "../types/SearchTypes";
-import LeaveReview from "../components/LeaveReview";
-import DescriptionWidget from "../components/DescriptionWidget";
-import RatingStars from "../components/RatingStars";
+
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -83,7 +84,12 @@ const DetailPage = () => {
       </div>
       <div className="divider divider-neutral mx-10" />
 
-      <DescriptionWidget description={details?.description} />
+      <div className="mx-10">
+        <h1 className="unbderline mb-4 flex justify-center text-center text-3xl font-bold underline">
+          Description
+        </h1>
+        <Description description={details?.description} className="text-2xl" />
+      </div>
 
       <div className="divider divider-neutral mx-10" />
 
